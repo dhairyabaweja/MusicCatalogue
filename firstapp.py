@@ -9,14 +9,55 @@ app = Flask(__name__)
 
 app.config['SECRET_KEY'] = '2e3d9442882549964af284ca7d59f157'
 
-engine = create_engine('oracle://dhairya:dhai7735@localhost/orcl')
+engine = create_engine('oracle://SYSTEM:Rishu0201@localhost/XE')
 
 bcrypt = Bcrypt(app)
 
+email_entered = "Email"
 
 @app.route("/")
 def home():
     return render_template('home.html')
+
+@app.route("/userhome")
+def userhome():
+    posts = []
+    albumpost = []
+    artistpost = []
+    songs = engine.execute("select * from Songs")
+    for song in songs:
+        songID = song[0]
+        albumid  = song[2]
+        image = engine.execute("select Image from Album where AlbumID = :albumid",{'albumid':albumid})
+        for row in image:
+            songimage = row
+        SongImage = songimage[0]
+        post = {'SongID':songID, 'SongName':song[1],'Image':SongImage,'SongUrl':song[5]}
+        posts.append(post)
+
+    albums = engine.execute("select * from Album")
+    for album in albums:
+        albumID = album[0]
+        x = engine.execute("select count(*) from Songs where AlbumID = :albumID",{'albumID':albumID})
+        for row in x:
+            noOfSongs = row[0]
+        post = {'AlbumName':album[1], 'Image':album[2], 'NumSongs': noOfSongs}
+        albumpost.append(post)
+
+    artists = engine.execute("select * from Artist")
+    for artist in artists:
+        artistID= artist[0]
+        x = engine.execute("select count(*) from Composition where ArtistID = :artistID",{'artistID':artistID})
+        for row in x:
+            noOfSongs= row[0]
+        post = {'ArtistName':artist[1], 'Image':artist[3], 'NumofSongs': noOfSongs}
+        artistpost.append(post)
+    return render_template('userhome.html', posts=posts,albumpost=albumpost, artistpost=artistpost)
+
+@app.route("/history")
+def history():
+
+    return render_template('userhistory.html')
 
 @app.route("/about")
 def about():
@@ -185,8 +226,9 @@ def addsong():
 
 # @app.route("/deletesong/", methods=['GET', 'POST'])
 # def delete():
-
-
-
+@app.route("/insertHistory/", methods=['GET', 'POST'])
+def insertHistory(songid):
+    print(songid)
+    return render_template('userhome.html')
 if __name__ == '__main__':
     app.run(debug=True)
