@@ -1,0 +1,94 @@
+{% extends "adminlayout.html" %}
+{% block content %}
+    <div class="content-section">
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Add Song</legend>
+                <div class="form-group">
+                    {{ form.SongName.label(class="form-control-label") }}
+                    {% if form.SongName.errors %}
+                        {{ form.SongName(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.SongName.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.SongName(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                        {{ form.AlbumName.label }}
+                        {% if form.AlbumName.errors %}
+                            {{ form.AlbumName(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.AlbumName.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.AlbumName(class="btn btn-secondary dropdown-toggle") }}
+                            <a href="{{ url_for("registeralbum") }}"><button type="button" class="btn btn-primary">Add Album </button></a>
+                        {% endif %}
+                </div>
+                <div class="form-group">
+                        {{ form.ArtistName.label }}
+                        {% if form.ArtistName.errors %}
+                            {{ form.ArtistName(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.ArtistName.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.ArtistName(class="btn btn-secondary dropdown-toggle") }}
+                            <a href="{{ url_for("registerartist") }}"><button type="button" class="btn btn-primary"> Add Artist </button></a>
+                        {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.Language.label(class="form-control-label") }}
+                    {% if form.Language.errors %}
+                        {{ form.Language(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.Language.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.Language(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                        {{ form.Duration.label(class="form-control-label") }}
+                        {% if form.Duration.errors %}
+                            {{ form.Duration(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.Duration.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.Duration(class="form-control form-control-lg") }}
+                        {% endif %}
+                </div>
+                <div class="form-group">
+                        {{ form.SongURL.label(class="form-control-label") }}
+                        {% if form.SongURL.errors %}
+                            {{ form.SongURL(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.SongURL.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.SongURL(class="form-control form-control-lg") }}
+                        {% endif %}
+                </div>
+            </fieldset>
+            <div class="form-group">
+                {{ form.submit(class="btn btn-outline-info") }}
+            </div>
+        </form>
+    </div>
+{% endblock content %}

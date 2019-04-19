@@ -19,7 +19,7 @@ public class DatabaseManagement extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
 
     private static final String SONGS_TABLE = "SongsTable";
-    private static final String SONGS_COLUMN_0= "SongID";
+    private static final String SONGS_COLUMN_0 = "SongID";
     private static final String SONGS_COLUMN_1 = "SongName";
     private static final String SONGS_COLUMN_2 = "AlbumID";
     private static final String SONGS_COLUMN_3 = "Language";

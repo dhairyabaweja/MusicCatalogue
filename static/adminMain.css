@@ -1,0 +1,19 @@
+
+.jumbotron{
+    margin-bottom: 0rem;
+}
+
+#playsong{
+    margin-right: 5%;
+    padding-left:4%;
+    padding-right:4%;  
+}
+
+.content-section {
+    background: #ffffff;
+    padding: 10px 20px;
+    border: 1px solid #dddddd;
+    border-radius: 3px;
+    margin-bottom: 20px;
+    opacity: 0.7;
+  }

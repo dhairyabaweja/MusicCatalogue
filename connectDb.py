@@ -22,8 +22,9 @@ sid = cx_Oracle.makedsn(host,port,sid=sid)
 #     echo=True
 # )
 engine = create_engine('oracle://dhairya:dhai7735@localhost/orcl')
+connection = engine.connect()
+result = connection.execute('select * from Album')
 
-result = engine.execute('select * from new')
 for row in result:
-    print (row)
+    print (row[2])
 
