@@ -1,0 +1,54 @@
+{% extends "userbasiclayout.html" %}
+{% block content %}
+<div class="row container   ">
+    {% for post in posts %}
+        <div class="col-md-4 mb-5 songpost">
+            <div class="card h-100">
+            <div class="card-body">
+                <h2 class="card-title">{{ post.SongName }}</h2>
+                <img src="{{ post.Image }}">
+            </div>
+            
+                <audio controls="controls" src="{{ post.SongUrl }}">
+                </audio>
+            
+                <a href="{{ url_for('insertHistory',songid={{ post.SongID }} ) }}"><button class="primary"></button></a>
+            <div class="card-footer">
+            </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+<div class="row container   ">
+    {% for album in albumpost %}
+        <div class="col-md-4 mb-5 songpost">
+            <div class="card h-100">
+            <div class="card-body">
+                <h2 class="card-title">{{ album.AlbumName }}</h2>
+                <img src="{{ album.Image }}" height="100px" width="100px">
+            </div>
+            <div class="card-footer">
+                <p>Num of Songs : {{ album.NumSongs }}</p>
+            </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+<div class="row container   ">
+        {% for artist in artistpost %}
+            <div class="col-md-4 mb-5 songpost">
+                <div class="card h-100">
+                <div class="card-body">
+                    <h2 class="card-title">{{ artist.ArtistName }}</h2>
+                    <img src="{{ artist.Image }}" >
+                </div>
+                <div class="card-footer">
+                    <p>Num of Songs : {{ artist.NumofSongs }}</p>
+                </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock content %}
