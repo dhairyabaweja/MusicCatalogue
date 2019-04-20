@@ -13,10 +13,51 @@ engine = create_engine('oracle://dhairya:dhai7735@localhost/orcl')
 
 bcrypt = Bcrypt(app)
 
+email_entered = "Email"
 
 @app.route("/")
 def home():
     return render_template('home.html')
+
+@app.route("/userhome")
+def userhome():
+    posts = []
+    albumpost = []
+    artistpost = []
+    songs = engine.execute("select * from Songs")
+    for song in songs:
+        songID = song[0]
+        albumid  = song[2]
+        image = engine.execute("select Image from Album where AlbumID = :albumid",{'albumid':albumid})
+        for row in image:
+            songimage = row
+        SongImage = songimage[0]
+        post = {'SongID':songID, 'SongName':song[1],'Image':SongImage,'SongUrl':song[5]}
+        posts.append(post)
+
+    albums = engine.execute("select * from Album")
+    for album in albums:
+        albumID = album[0]
+        x = engine.execute("select count(*) from Songs where AlbumID = :albumID",{'albumID':albumID})
+        for row in x:
+            noOfSongs = row[0]
+        post = {'AlbumName':album[1], 'Image':album[2], 'NumSongs': noOfSongs}
+        albumpost.append(post)
+
+    artists = engine.execute("select * from Artist")
+    for artist in artists:
+        artistID= artist[0]
+        x = engine.execute("select count(*) from Composition where ArtistID = :artistID",{'artistID':artistID})
+        for row in x:
+            noOfSongs= row[0]
+        post = {'ArtistName':artist[1], 'Image':artist[3], 'NumofSongs': noOfSongs}
+        artistpost.append(post)
+    return render_template('userhome.html', posts=posts,albumpost=albumpost, artistpost=artistpost)
+
+@app.route("/history")
+def history():
+
+    return render_template('userhistory.html')
 
 @app.route("/about")
 def about():
@@ -24,6 +65,7 @@ def about():
 
 @app.route("/admin", methods=['GET'])
 def admin():
+    print(email_entered)
     posts = []
     songs = engine.execute("select * from Songs")
     for song in songs:
@@ -181,7 +223,29 @@ def delete(songid):
     engine.execute("delete from Songs where SongID=:songid",{'songid':songid})
     flash('Song Deleted')
     return redirect(url_for('admin'))
+    return render_template('adminDisplaySong.html')
 
+@app.route("/adminProfile", methods=['GET', 'POST'])
+def adminProfile():
+    return render_template('adminProfile.html', title='admin')
+
+@app.route("/userList", methods=['GET', 'POST'])
+def userList():
+    users = engine.execute("select * from UserInfo")
+    userlist = []
+    i=1
+    for row in users:
+        userlist.append({'index':i,'FirstName':row[0],'LastName':row[1],'Email':row[2]})
+        i = i+1
+    return render_template('userList.html', title='users', userlist=userlist)
+
+
+@app.route("/deleteUser/<id>", methods=['GET', 'POST'])
+def deleteUser(id):
+    engine.execute("delete from UserInfo where email= :id",{'id':id})
+    print(id)
+    flash('User Deleted')
+    return redirect(url_for('userList'))
 
 if __name__ == '__main__':
     app.run(debug=True)

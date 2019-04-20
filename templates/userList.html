@@ -1,0 +1,35 @@
+<script>
+        function storeID(id){
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("POST", "/deleteUser/"+id, true);
+            xhttp.send();
+        }
+</script>
+
+{% extends "adminlayout.html" %}
+{% block content %}
+<table class="table table-hover">
+        <thead>
+          <tr>
+            <th scope="col">S.No</th>
+            <th scope="col">FirstName</th>
+            <th scope="col">LastName</th>
+            <th scope="col">Email</th>
+            <th scope="col">Want to Delete?</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for user in userlist %}
+                <tr>
+                    <th scope="row">{{ user.index }}</th>
+                    <td>{{ user.FirstName }}</td>
+                    <td>{{ user.LastName }}</td>
+                    <td>{{ user.Email }}</td>
+                    <td>
+                        <button type="button" class="btn btn-danger" onclick="storeID('{{user.Email}}')">Delete</button>
+                    </td>
+                </tr>
+           {% endfor %}
+        </tbody>
+      </table>
+{% endblock content %}
