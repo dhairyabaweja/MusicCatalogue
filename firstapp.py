@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 app.config['SECRET_KEY'] = '2e3d9442882549964af284ca7d59f157'
 
-engine = create_engine('oracle://SYSTEM:Rishu0201@localhost/XE')
+engine = create_engine('oracle://dhairya:dhai7735@localhost/orcl')
 
 bcrypt = Bcrypt(app)
 
@@ -76,6 +76,7 @@ def about():
 
 @app.route("/admin", methods=['GET'])
 def admin():
+    print(email_entered)
     posts = []
     songs = engine.execute("select * from Songs")
     for song in songs:
@@ -84,7 +85,7 @@ def admin():
         for row in image:
             songimage = row
         SongImage = songimage[0]
-        post = {'SongName':song[1],'Image':SongImage,'SongUrl':song[5]}
+        post = {'SongName':song[1],'Image':SongImage,'SongUrl':song[5], 'SongId':song[0]}
         posts.append(post)
 
     return render_template('adminDisplaySong.html',posts=posts)
@@ -215,14 +216,6 @@ def addsong():
         for row in arid:
             artistid= row
         artistId = artistid[0]
-        # password_reg = engine.execute("select password from UserInfo where email = :email_entered",{'email_entered':email_entered})
-        # for row in password_reg:
-        #     reg = row
-        # if bcrypt.check_password_hash(reg[0] , form.password.data) :
-        #     flash('You have been logged in!', 'success')
-        #     return redirect(url_for('home'))
-        # else:
-        #     flash('Login Unsuccessful. Please check username and password', 'danger')
         maxid = engine.execute("select max(SongID) from Songs")
         for row in maxid:
             Max = row
@@ -289,6 +282,36 @@ def popularSongs():
         post = {'SongID':songID, 'SongName':song[1],'Image':SongImage,'SongUrl':song[5]}
         posts.append(post)
     return render_template('songInfo.html',posts=posts)
+
+@app.route("/delete/<songid>", methods=['POST', 'GET'])
+def delete(songid):
+    engine.execute("delete from Composition where SongID=:songid",{'songid':songid})
+    engine.execute("delete from Songs where SongID=:songid",{'songid':songid})
+    flash('Song Deleted')
+    return redirect(url_for('admin'))
+    return render_template('adminDisplaySong.html')
+
+@app.route("/adminProfile", methods=['GET', 'POST'])
+def adminProfile():
+    return render_template('adminProfile.html', title='admin')
+
+@app.route("/userList", methods=['GET', 'POST'])
+def userList():
+    users = engine.execute("select * from UserInfo")
+    userlist = []
+    i=1
+    for row in users:
+        userlist.append({'index':i,'FirstName':row[0],'LastName':row[1],'Email':row[2]})
+        i = i+1
+    return render_template('userList.html', title='users', userlist=userlist)
+
+
+@app.route("/deleteUser/<id>", methods=['GET', 'POST'])
+def deleteUser(id):
+    engine.execute("delete from UserInfo where email= :id",{'id':id})
+    print(id)
+    flash('User Deleted')
+    return redirect(url_for('userList'))
 
 if __name__ == '__main__':
     app.run(debug=True)
