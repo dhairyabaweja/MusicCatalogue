@@ -41,23 +41,34 @@ def userhome():
         x = engine.execute("select count(*) from Songs where AlbumID = :albumID",{'albumID':albumID})
         for row in x:
             noOfSongs = row[0]
-        post = {'AlbumName':album[1], 'Image':album[2], 'NumSongs': noOfSongs}
+        post = {'AlbumName':album[1], 'Image':album[2], 'NumSongs': noOfSongs, 'AlbumID': album[0]}
         albumpost.append(post)
 
     artists = engine.execute("select * from Artist")
     for artist in artists:
-        artistID= artist[0]
+        artistID = artist[0]
         x = engine.execute("select count(*) from Composition where ArtistID = :artistID",{'artistID':artistID})
         for row in x:
             noOfSongs= row[0]
-        post = {'ArtistName':artist[1], 'Image':artist[3], 'NumofSongs': noOfSongs}
+        post = {'ArtistID':artist[0], 'ArtistName':artist[1], 'Image':artist[3], 'NumofSongs': noOfSongs}
         artistpost.append(post)
     return render_template('userhome.html', posts=posts,albumpost=albumpost, artistpost=artistpost)
 
-@app.route("/history")
-def history():
-
-    return render_template('userhistory.html')
+@app.route("/userhistory")
+def userhistory():
+    SongsHistory=engine.execute("select * from Songs S join History H on S.SongID = H.SongID where H.Email = :email_entered order by H.DateAndTime desc",{'email_entered':email_entered})
+    historyposts = []
+    for song in SongsHistory:
+        songName = song[1]
+        albumid = song[2]
+        image = engine.execute("select Image from Album where AlbumID = :albumid",{'albumid':albumid})
+        for row in image:
+            songimage = row
+        SongImage = songimage[0]
+        dateandtime = song[8]
+        post = {'SongName':songName, 'SongImage':SongImage, 'DateAndTime':dateandtime}
+        historyposts.append(post)
+    return render_template('userhistory.html',historyposts=historyposts)
 
 @app.route("/about")
 def about():
@@ -217,18 +228,67 @@ def addsong():
             Max = row
         songid = int(Max[0])
         songid = songid + 1
-        engine.execute("insert into Songs(SongID,SongName,AlbumID,Language,Duration,SongURL) values(:songid,:songname,:albumId,:language,:duration,:songurl)",{'songid':songid,'songname':songname,
+        engine.execute("insert into Songs(SongID,SongName,AlbumID,Language,Duration,SongURL,Frequency) values(:songid,:songname,:albumId,:language,:duration,:songurl,0)",{'songid':songid,'songname':songname,
                                                             'albumId':albumId,'language':language,'duration':duration,'songurl':songurl})
         engine.execute("insert into Composition(SongID,ArtistID) values(:songid,:artistId)",{'songid':songid,'artistId':artistId})
         return redirect(url_for('admin'))
     return render_template('adminAddsong.html', title='admin', form=form)
 
+@app.route("/insert/<songid>", methods=['POST', 'GET'])
+def insert(songid):
+    x = engine.execute("select count(*) from History where SongID = :songid and Email = :email_entered",{'songid':songid, 'email_entered':email_entered})
+    for row in x:
+        noOfSongs = row[0]
+    if noOfSongs == 0:
+        engine.execute("insert into History(Email,SongID,DateAndTime) values(:email_entered,:songid,TO_CHAR(sysdate, 'yyyy/mm/dd hh24:mi:ss'))",{'email_entered':email_entered,'songid':songid})
+        engine.execute("update Songs set Frequency = (select Frequency from Songs where SongID = :songid) + 1 where SongID = :songid",{'songid':songid})
+    else:
+        engine.execute("update History set DateAndTime = TO_CHAR(sysdate, 'yyyy/mm/dd hh24:mi:ss') where SongID = :songid",{'songid':songid})
+    return ''
 
-# @app.route("/deletesong/", methods=['GET', 'POST'])
-# def delete():
-@app.route("/insertHistory/", methods=['GET', 'POST'])
-def insertHistory(songid):
-    print(songid)
-    return render_template('userhome.html')
+@app.route("/songInfo/<albumid>", methods=['POST', 'GET'])
+def songInfo(albumid):
+    posts = []
+    songs = engine.execute("select * from Songs where AlbumID = :albumid",{'albumid':albumid})
+    for song in songs:
+        songID = song[0]
+        image = engine.execute("select Image from Album where AlbumID = :albumid",{'albumid':albumid})
+        for row in image:
+            songimage = row
+        SongImage = songimage[0]
+        post = {'SongID':songID, 'SongName':song[1],'Image':SongImage,'SongUrl':song[5]}
+        posts.append(post)
+    return render_template('songInfo.html',posts=posts)
+
+@app.route("/songInfoOfArtist/<artistid>", methods=['POST', 'GET'])
+def songInfoOfArtist(artistid):
+    posts = []
+    songs = engine.execute("select * from Songs where SongID in (select distinct SongID from Composition where ArtistID = :artistid)",{'artistid':artistid})
+    for song in songs:
+        songID = song[0]
+        albumid = song[2]
+        image = engine.execute("select Image from Album where AlbumID = :albumid",{'albumid':albumid})
+        for row in image:
+            songimage = row
+        SongImage = songimage[0]
+        post = {'SongID':songID, 'SongName':song[1],'Image':SongImage,'SongUrl':song[5]}
+        posts.append(post)
+    return render_template('songInfo.html',posts=posts)
+
+@app.route("/songInfo", methods=['POST', 'GET'])
+def popularSongs():
+    posts = []
+    songs = engine.execute("select * from Songs order by Frequency desc")
+    for song in songs:
+        songID = song[0]
+        albumid = song[2]
+        image = engine.execute("select Image from Album where AlbumID = :albumid",{'albumid':albumid})
+        for row in image:
+            songimage = row
+        SongImage = songimage[0]
+        post = {'SongID':songID, 'SongName':song[1],'Image':SongImage,'SongUrl':song[5]}
+        posts.append(post)
+    return render_template('songInfo.html',posts=posts)
+
 if __name__ == '__main__':
     app.run(debug=True)
