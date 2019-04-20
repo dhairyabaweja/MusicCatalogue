@@ -1,29 +1,74 @@
+<script>
+    function storeID(id) {
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("POST", "/insert/"+id, true);
+        xhttp.send();
+    }
+</script>
+
+<script>
+    function searchEngine() {
+        var input, filter, ul, li, a, i, txtValue;
+        input = document.getElementById('myInput');
+        filter = input.value.toUpperCase();
+        ul = document.querySelectorAll('#wrapper');
+        console.log(ul);
+        ul.forEach(element => {
+            li = element.querySelectorAll('#postsearch');
+            for (i = 0; i < li.length; i++) {
+                a = li[i].querySelector('.card-title');
+                if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                    li[i].style.display = "";
+                }
+                else {
+                    li[i].style.display = "none";
+                }
+            }
+        });
+        
+
+    }
+</script>
+
 {% extends "userbasiclayout.html" %}
 {% block content %}
-<div class="row container   ">
+
+
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <form class="form-inline my-2 my-lg-0">
+        <input class="form-control mr-sm-2" type="text" name="search" autocomplete="off" value="" placeholder="Search among Songs, Albums and Artists" aria-label="Search"
+        id="myInput" onkeyup="searchEngine()">
+      </form>
+    </div>
+  </nav>
+
+
+<h1 title="Songs" >Songs</h1>
+<div class="row container" id="wrapper">
     {% for post in posts %}
-        <div class="col-md-4 mb-5 songpost">
-            <div class="card h-100">
+    <div class="col-md-4 mb-5 songpost" id="postsearch">
+            <div class="card">
             <div class="card-body">
                 <h2 class="card-title">{{ post.SongName }}</h2>
-                <img src="{{ post.Image }}">
+                <img src="{{ post.Image }}" width="100%">
             </div>
-            
-                <audio controls="controls" src="{{ post.SongUrl }}">
-                </audio>
-            
-                <a href="{{ url_for('insertHistory',songid={{ post.SongID }} ) }}"><button class="primary"></button></a>
+                    <audio controls="controls" src="{{ post.SongUrl }}" onplay="storeID('{{post.SongID}}')">
+                    </audio>
             <div class="card-footer">
             </div>
             </div>
         </div>
+        </a>
     {% endfor %}
 </div>
 
-<div class="row container   ">
+<h1 title="Albums" >Albums</h1>
+<div class="row container" id="wrapper">
     {% for album in albumpost %}
-        <div class="col-md-4 mb-5 songpost">
-            <div class="card h-100">
+        <div class="col-md-4 mb-5 songpost" id="postsearch" onclick="location.href='/songInfo/{{ album.AlbumID }}'">
+            <div class="card">
             <div class="card-body">
                 <h2 class="card-title">{{ album.AlbumName }}</h2>
                 <img src="{{ album.Image }}" height="100px" width="100px">
@@ -36,10 +81,11 @@
     {% endfor %}
 </div>
 
-<div class="row container   ">
+<h1 title="Artists" >Artists</h1>
+<div class="row container" id="wrapper">
         {% for artist in artistpost %}
-            <div class="col-md-4 mb-5 songpost">
-                <div class="card h-100">
+            <div class="col-md-4 mb-5 songpost" id="postsearch" onclick="location.href='/songInfoOfArtist/{{ artist.ArtistID }}'">
+                <div class="card">
                 <div class="card-body">
                     <h2 class="card-title">{{ artist.ArtistName }}</h2>
                     <img src="{{ artist.Image }}" >
