@@ -1,3 +1,11 @@
+<script>
+    function storeID(id){
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("POST", "/delete/"+id, true);
+        xhttp.send();
+    }
+</script>
+
 {% extends "adminlayout.html" %}
 {% block content %}
     <div class="row">
@@ -8,9 +16,9 @@
                   <h2 class="card-title">{{ post.SongName }}</h2>
                   <img src="{{ post.Image }}">
                 </div>
-                <audio controls="controls" autoplay="autoplay" src="{{ post.SongUrl }}"></audio>
+                <audio controls="controls" src="{{ post.SongUrl }}"></audio>
                 <div class="card-footer">
-                <a href="#" class="btn btn-primary btn-sm">Delete</a>
+                <button type="button" class="btn btn-primary" onclick="storeID('{{post.SongId}}')">Delete</button>
                 </div>
               </div>
             </div>

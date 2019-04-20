@@ -32,7 +32,7 @@ def admin():
         for row in image:
             songimage = row
         SongImage = songimage[0]
-        post = {'SongName':song[1],'Image':SongImage,'SongUrl':song[5]}
+        post = {'SongName':song[1],'Image':SongImage,'SongUrl':song[5], 'SongId':song[0]}
         posts.append(post)
 
     return render_template('adminDisplaySong.html',posts=posts)
@@ -163,14 +163,6 @@ def addsong():
         for row in arid:
             artistid= row
         artistId = artistid[0]
-        # password_reg = engine.execute("select password from UserInfo where email = :email_entered",{'email_entered':email_entered})
-        # for row in password_reg:
-        #     reg = row
-        # if bcrypt.check_password_hash(reg[0] , form.password.data) :
-        #     flash('You have been logged in!', 'success')
-        #     return redirect(url_for('home'))
-        # else:
-        #     flash('Login Unsuccessful. Please check username and password', 'danger')
         maxid = engine.execute("select max(SongID) from Songs")
         for row in maxid:
             Max = row
@@ -183,9 +175,12 @@ def addsong():
     return render_template('adminAddsong.html', title='admin', form=form)
 
 
-# @app.route("/deletesong/", methods=['GET', 'POST'])
-# def delete():
-
+@app.route("/delete/<songid>", methods=['POST', 'GET'])
+def delete(songid):
+    engine.execute("delete from Composition where SongID=:songid",{'songid':songid})
+    engine.execute("delete from Songs where SongID=:songid",{'songid':songid})
+    flash('Song Deleted')
+    return redirect(url_for('admin'))
 
 
 if __name__ == '__main__':
