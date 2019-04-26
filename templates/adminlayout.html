@@ -13,6 +13,21 @@
     </title>
 </head>
 <body>
+    <main role="main" class="container">
+        <div class="row">
+            <div class="col-md-8">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+  </div>
+  </div>
+  </main>
     <div class="jumbotron jumbotron-fluid">
         <div class="container" id="jumbo">
           <h1 class="display-4">Admin Panel</h1>
@@ -30,7 +45,7 @@
                 <a class="nav-link" href="{{ url_for('addsong') }}">Add Songs</a>  
               </li>
               <li class="nav-item">
-                <a class="nav-link" href=#>Profile</a>
+                <a class="nav-link" href="{{ url_for('adminProfile') }}"   >Profile</a>
               </li>
             </ul>
           </div>

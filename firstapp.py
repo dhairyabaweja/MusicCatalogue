@@ -1,5 +1,5 @@
 from flask import Flask,render_template,url_for,flash,redirect
-from forms import RegistrationForm, LoginForm, RegisterAlbum,RegisterArtist,AddSongs
+from forms import RegistrationForm, LoginForm, RegisterAlbum,RegisterArtist,AddSongs,UpdateForm
 from sqlalchemy import create_engine
 from flask_bcrypt import Bcrypt
 import cx_Oracle
@@ -21,6 +21,8 @@ def home():
 
 @app.route("/userhome")
 def userhome():
+    if email_entered == 'Email':
+        return redirect(url_for('home'))
     posts = []
     albumpost = []
     artistpost = []
@@ -56,6 +58,8 @@ def userhome():
 
 @app.route("/userhistory")
 def userhistory():
+    if email_entered == 'Email':
+        return redirect(url_for('home'))
     SongsHistory=engine.execute("select * from Songs S join History H on S.SongID = H.SongID where H.Email = :email_entered order by H.DateAndTime desc",{'email_entered':email_entered})
     historyposts = []
     for song in SongsHistory:
@@ -117,18 +121,33 @@ def register():
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
+    global email_entered
     form = LoginForm()
     if form.validate_on_submit() :
         password_entered = form.password.data
         email_entered = form.email.data
+        print(email_entered)
+        count = engine.execute("select count(*) from UserInfo where email = :email_entered",{'email_entered':email_entered})
+        for cnt in count:
+            noofemails = cnt
+        print(noofemails[0])
         password_reg = engine.execute("select password from UserInfo where email = :email_entered",{'email_entered':email_entered})
+        username = engine.execute("select FirstName from UserInfo where email = :email_entered",{'email_entered':email_entered})
         for row in password_reg:
             reg = row
-        if bcrypt.check_password_hash(reg[0] , form.password.data) :
-            flash('You have been logged in!', 'success')
-            return redirect(url_for('home'))
+        for row in username:
+            user = row[0]
+        if noofemails[0] == 1:
+            if bcrypt.check_password_hash(reg[0] , form.password.data) :
+                flash('You have been logged in!', 'success')
+                if email_entered == 'iit2017080@iiita.ac.in':
+                    return redirect(url_for('admin'))
+                else:
+                    return redirect(url_for('userhome', user=user))
+            else:
+                flash('Login Unsuccessful. Please check username and password', 'danger')
         else:
-            flash('Login Unsuccessful. Please check username and password', 'danger')
+            flash('Incorrect email or password', 'danger')
     return render_template('login.html', title='Login', form=form)
 
 
@@ -202,6 +221,7 @@ def addsong():
         duration = form.Duration.data
         albumname = form.AlbumName.data
         artistname = form.ArtistName.data
+        print(artistname)
         songurl = form.SongURL.data
         # albumimage = engine.execute("select Image from Album where AlbumName = :albumname",{'albumname':albumname})
         # for row in albumimage:
@@ -241,6 +261,9 @@ def insert(songid):
 
 @app.route("/songInfo/<albumid>", methods=['POST', 'GET'])
 def songInfo(albumid):
+    print(email_entered)
+    if email_entered == 'Email':
+        return redirect(url_for('home'))
     posts = []
     songs = engine.execute("select * from Songs where AlbumID = :albumid",{'albumid':albumid})
     for song in songs:
@@ -293,7 +316,16 @@ def delete(songid):
 
 @app.route("/adminProfile", methods=['GET', 'POST'])
 def adminProfile():
-    return render_template('adminProfile.html', title='admin')
+    if email_entered == 'Email':
+        flash('Please Login First','danger')
+        return redirect(url_for('admin'))
+    firstname = engine.execute("select FirstName from UserInfo where email = :email_entered",{'email_entered':email_entered})
+    for row in firstname:
+        fn = row[0]
+    lastname = engine.execute("select LastName from UserInfo where email = :email_entered",{'email_entered':email_entered})
+    for row in lastname:
+        ln = row[0]
+    return render_template('adminProfile.html', email_entered=email_entered,fn=fn,ln=ln)
 
 @app.route("/userList", methods=['GET', 'POST'])
 def userList():
@@ -312,6 +344,41 @@ def deleteUser(id):
     print(id)
     flash('User Deleted')
     return redirect(url_for('userList'))
+
+
+@app.route("/updateinfo", methods=['GET', 'POST'])
+def updateinfo():
+    first = engine.execute("select FirstName from UserInfo where email = :email_entered",{'email_entered':email_entered}) 
+    last = engine.execute("select LastName from UserInfo where email = :email_entered",{'email_entered':email_entered})
+    for row in first:
+        firstname = row[0]
+    for row in last:
+        lastname = row[0]
+    form = UpdateForm()
+    form.firstname.data = firstname
+    form.lastname.data = lastname
+    if form.validate_on_submit() :
+        fn = form.firstname.data
+        ln = form.lastname.data
+        password = form.newpassword.data
+        oldpassword = form.oldpassword.data
+        password_reg = engine.execute("select password from UserInfo where email = :email_entered",{'email_entered':email_entered})
+        
+        for row in password_reg:
+            reg = row[0]
+
+        if bcrypt.check_password_hash(reg, oldpassword) :
+            hashed_pw = bcrypt.generate_password_hash(password).decode('utf-8')
+            if fn != firstname:
+                engine.execute("update UserInfo set FirstName=:fn where email=:email_entered",{'email_entered':email_entered,'fn':fn})
+            if ln != lastname:
+                engine.execute("update UserInfo set LastName=:ln where email=:email_entered",{'email_entered':email_entered,'ln':ln})
+            engine.execute("update UserInfo set password=:hashed_pw where email=:email_entered",{'email_entered':email_entered,'hashed_pw':hashed_pw})
+            return redirect(url_for('adminProfile'))
+        else:
+            flash('Old password not valid!','danger')
+            return ''
+    return render_template('adminupdateProfile.html', form=form)
 
 if __name__ == '__main__':
     app.run(debug=True)

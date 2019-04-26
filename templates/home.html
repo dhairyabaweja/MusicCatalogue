@@ -1,4 +1,22 @@
-{% extends "layout.html" %}
+
+{% extends "userbasiclayout.html" %}
 {% block content%}
-    <h1 >WELCOME!</h1>
+<section class="banner-area relative" id="home">
+    <div id="particles-js"></div>
+    <div class="container">
+        <div class="row fullscreen align-items-center justify-content-center" style="height: 735px;">
+            <div class="col-lg-10">
+                <div class="banner-content text-center">
+                    <h1 class="text-uppercase text-white">Music is life</h1>
+                    <p class="text-uppercase mx-auto" >
+                        Universal Truth
+                    </p>
+                    <a href="{{ url_for('login') }}" class="mybtn"><span>LogIn</span></a>
+                    <a href="{{ url_for('register') }}" class="mybtn"><span> SignUp</span> </a>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 {% endblock content %}

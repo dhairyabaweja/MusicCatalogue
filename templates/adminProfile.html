@@ -1,4 +1,29 @@
+<script>
+        function storeID(fn,ln){
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("POST", "/updateinfo/"+fn+"/"+ln, true);
+            xhttp.send();
+        }
+    </script>
 {% extends "adminlayout.html" %}
 {% block content %}
+<table class="table">
+    <tbody>
+      <tr>
+        <th scope="row">First Name</th>
+        <td>{{ fn }}</td>
+      </tr>
+      <tr>
+        <th scope="row">Last Name</th>
+        <td>{{ ln }}</td>
+      </tr>
+      <tr>
+        <th scope="row">Email</th>
+        <td>{{ email_entered }}</td>
+      </tr>
+    </tbody>
+  </table>
+  
+    <a href="{{ url_for('updateinfo') }}"><button type="button" class="btn btn-info">Update </button></a>
     <a href="{{ url_for('userList') }}"><button type="button" class="btn btn-info">View Users</button></a>
 {% endblock content %}

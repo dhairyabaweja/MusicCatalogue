@@ -6,9 +6,9 @@ from sqlalchemy import create_engine
 engine = create_engine('oracle://dhairya:dhai7735@localhost/orcl')
 
 class RegistrationForm(FlaskForm):
-    firstname = StringField('FirstName',
+    firstname = StringField('First Name',
                            validators=[DataRequired(), Length(min=2, max=20)])
-    lastname = StringField('Lastname',
+    lastname = StringField('Last Name',
                            validators=[DataRequired(), Length(min=2, max=20)])
     email = StringField('Email',
                         validators=[DataRequired(), Email()])
@@ -57,3 +57,14 @@ class AddSongs(FlaskForm):
     SongURL = StringField('Song Url',
                         validators=[DataRequired(),URL()])
     submit = SubmitField('Add')
+
+
+class UpdateForm(FlaskForm):
+    firstname = StringField('First Name',
+                           validators=[DataRequired(), Length(min=2, max=20)])
+    lastname = StringField('Last Name',
+                           validators=[DataRequired(), Length(min=2, max=20)])  
+    oldpassword = PasswordField('Old Password', validators=[DataRequired()])
+    newpassword = PasswordField('New Password',
+                                     validators=[DataRequired()])
+    submit = SubmitField('Update')

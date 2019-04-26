@@ -1,3 +1,16 @@
+
+
+<script>
+    function addartist(){
+        var select = document.getElementById('list').cloneNode(true);
+        document.getElementById('parentdiv').appendChild(select);
+    }
+    function deleteartist(){
+        var select = document.getElementById('list');
+        document.getElementById('parentdiv').removeChild(select);
+    }
+</script>
+
 {% extends "adminlayout.html" %}
 {% block content %}
     <div class="content-section">
@@ -32,7 +45,7 @@
                             <a href="{{ url_for("registeralbum") }}"><button type="button" class="btn btn-primary">Add Album </button></a>
                         {% endif %}
                 </div>
-                <div class="form-group">
+                <div class="form-group" id="parentdiv">
                         {{ form.ArtistName.label }}
                         {% if form.ArtistName.errors %}
                             {{ form.ArtistName(class="form-control form-control-lg is-invalid") }}
@@ -42,8 +55,10 @@
                                 {% endfor %}
                             </div>
                         {% else %}
-                            {{ form.ArtistName(class="btn btn-secondary dropdown-toggle") }}
+                            {{ form.ArtistName(id="list", class="btn btn-secondary dropdown-toggle") }}
+                            <button class="btn btn-primary" id="add" onclick="addartist()">+</button>
                             <a href="{{ url_for("registerartist") }}"><button type="button" class="btn btn-primary"> Add Artist </button></a>
+                            <button class="btn btn-primary" id="delete" onclick="deleteartist()">-</button>
                         {% endif %}
                 </div>
                 <div class="form-group">
