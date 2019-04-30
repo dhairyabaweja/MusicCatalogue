@@ -1,0 +1,25 @@
+
+{% extends "userbasiclayout.html" %}
+{% block content %}
+
+<br><br><br><br>
+<table class="table">
+    <tbody>
+      <tr>
+        <th scope="row">First Name</th>
+        <td>{{ fn }}</td>
+      </tr>
+      <tr>
+        <th scope="row">Last Name</th>
+        <td>{{ ln }}</td>
+      </tr>
+      <tr>
+        <th scope="row">Email</th>
+        <td>{{ email_entered }}</td>
+      </tr>
+    </tbody>
+  </table>
+  
+    <a href="{{ url_for('updateUser') }}"><button type="button" id="updatebtn" class="btn btn-danger btn-lg">Update </button></a>
+  
+{% endblock content %}

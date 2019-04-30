@@ -17,6 +17,8 @@ email_entered = "Email"
 
 @app.route("/")
 def home():
+    email_entered = "Email"
+    print(email_entered)
     return render_template('home.html')
 
 @app.route("/userhome")
@@ -103,19 +105,17 @@ def register():
         email = form.email.data
         password = form.password.data
         hashed_pw = bcrypt.generate_password_hash(password).decode('utf-8')
-        # def validate_email(self,email):
-        #     email = email.data
-        #     result = engine.execute('select * from UserInfo where email = :email',{'email':email})
-        #     for row in result:
-        #         raise ValidationError('That email is already taken. Please choose another email!')
-        # if user:
-        #     raise ValidationError('That email is already taken. Please choose another email!')
-        engine.execute("insert into UserInfo(FirstName, LastName, email,password) values (:firstname,:lastname,:email,:hashed_pw)",{'firstname':form.firstname.data,'lastname':form.lastname.data,
-                        'email':form.email.data,'hashed_pw':hashed_pw})
-        # engine.commit()
-        # engine.session.commit()
-        flash(f'Account created for {form.firstname.data}!', 'success')
-        return redirect(url_for('login'))
+        count = engine.execute("select count(*) from UserInfo where email = :email",{'email':email})
+        for cnt in count:
+            noofemails = cnt[0]
+        if noofemails == 1:
+            flash('This email is already taken! Please choose another one.','danger')
+            # return redirect(url_for('register'))
+        else:
+            engine.execute("insert into UserInfo(FirstName, LastName, email,password) values (:firstname,:lastname,:email,:hashed_pw)",{'firstname':form.firstname.data,'lastname':form.lastname.data,
+                            'email':form.email.data,'hashed_pw':hashed_pw})
+            flash(f'Account created for {form.firstname.data}!', 'success')
+            return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
 
 
@@ -137,6 +137,7 @@ def login():
             reg = row
         for row in username:
             user = row[0]
+        # print(user)
         if noofemails[0] == 1:
             if bcrypt.check_password_hash(reg[0] , form.password.data) :
                 flash('You have been logged in!', 'success')
@@ -232,18 +233,21 @@ def addsong():
         for row in aid:
             albumid= row
         albumId = albumid[0]
-        arid = engine.execute("select ArtistID from Artist where ArtistName = :artistname",{'artistname':artistname})
-        for row in arid:
-            artistid= row
-        artistId = artistid[0]
+        # arid = engine.execute("select ArtistID from Artist where ArtistName = :artistname",{'artistname':artistname})
+        # for row in arid:
+        #     artistid= row
+        # artistId = artistid[0]
         maxid = engine.execute("select max(SongID) from Songs")
         for row in maxid:
-            Max = row
-        songid = int(Max[0])
-        songid = songid + 1
+            Max = row[0]
+        songid = Max + 1
         engine.execute("insert into Songs(SongID,SongName,AlbumID,Language,Duration,SongURL,Frequency) values(:songid,:songname,:albumId,:language,:duration,:songurl,0)",{'songid':songid,'songname':songname,
                                                             'albumId':albumId,'language':language,'duration':duration,'songurl':songurl})
-        engine.execute("insert into Composition(SongID,ArtistID) values(:songid,:artistId)",{'songid':songid,'artistId':artistId})
+        for i in artistname:
+            arid = engine.execute("select ArtistID from Artist where ArtistName= :artistname",{'artistname':i})
+            for row in arid:
+                artistId = row[0]
+            engine.execute("insert into Composition(SongID,ArtistID) values(:songid,:artistId)",{'songid':songid,'artistId':artistId})
         return redirect(url_for('admin'))
     return render_template('adminAddsong.html', title='admin', form=form)
 
@@ -312,7 +316,7 @@ def delete(songid):
     engine.execute("delete from Songs where SongID=:songid",{'songid':songid})
     flash('Song Deleted')
     return redirect(url_for('admin'))
-    return render_template('adminDisplaySong.html')
+    # return render_template('adminDisplaySong.html')
 
 @app.route("/adminProfile", methods=['GET', 'POST'])
 def adminProfile():
@@ -379,6 +383,53 @@ def updateinfo():
             flash('Old password not valid!','danger')
             return ''
     return render_template('adminupdateProfile.html', form=form)
+
+
+@app.route("/userProfile", methods=['GET', 'POST'])
+def userProfile():
+    firstname = engine.execute("select FirstName from UserInfo where email = :email_entered",{'email_entered':email_entered})
+    for row in firstname:
+        fn = row[0]
+    lastname = engine.execute("select LastName from UserInfo where email = :email_entered",{'email_entered':email_entered})
+    for row in lastname:
+        ln = row[0]
+    return render_template('userProfile.html', email_entered=email_entered,fn=fn,ln=ln)
+
+
+@app.route("/updateUser", methods=['GET', 'POST'])
+def updateUser():
+    first = engine.execute("select FirstName from UserInfo where email = :email_entered",{'email_entered':email_entered}) 
+    last = engine.execute("select LastName from UserInfo where email = :email_entered",{'email_entered':email_entered})
+    for row in first:
+        firstname = row[0]
+    for row in last:
+        lastname = row[0]
+    form = UpdateForm()
+    form.firstname.data = firstname
+    form.lastname.data = lastname
+    if form.validate_on_submit() :
+        fn = form.firstname.data
+        ln = form.lastname.data
+        password = form.newpassword.data
+        oldpassword = form.oldpassword.data
+        password_reg = engine.execute("select password from UserInfo where email = :email_entered",{'email_entered':email_entered})
+        
+        for row in password_reg:
+            reg = row[0]
+
+        if bcrypt.check_password_hash(reg, oldpassword) :
+            hashed_pw = bcrypt.generate_password_hash(password).decode('utf-8')
+            if fn != firstname:
+                engine.execute("update UserInfo set FirstName=:fn where email=:email_entered",{'email_entered':email_entered,'fn':fn})
+            if ln != lastname:
+                engine.execute("update UserInfo set LastName=:ln where email=:email_entered",{'email_entered':email_entered,'ln':ln})
+            engine.execute("update UserInfo set password=:hashed_pw where email=:email_entered",{'email_entered':email_entered,'hashed_pw':hashed_pw})
+            return redirect(url_for('userProfile'))
+        else:
+            flash('Old password not valid!','danger')
+            return ''
+    return render_template('userUpdateProfile.html', form=form)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

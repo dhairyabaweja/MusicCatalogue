@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField,FileAllowed
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField,RadioField,SelectField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField,RadioField,SelectField,SelectMultipleField
 from wtforms.validators import DataRequired, Length, Email, EqualTo,ValidationError,URL
 from sqlalchemy import create_engine
 engine = create_engine('oracle://dhairya:dhai7735@localhost/orcl')
@@ -52,7 +52,7 @@ class AddSongs(FlaskForm):
                         validators=[DataRequired()])
     AlbumName = SelectField('Album Name',
                         choices=[])
-    ArtistName = SelectField('Artist Name',
+    ArtistName = SelectMultipleField('Artist Name',
                         choices=[])
     SongURL = StringField('Song Url',
                         validators=[DataRequired(),URL()])
@@ -67,4 +67,4 @@ class UpdateForm(FlaskForm):
     oldpassword = PasswordField('Old Password', validators=[DataRequired()])
     newpassword = PasswordField('New Password',
                                      validators=[DataRequired()])
-    submit = SubmitField('Update')
+    submit = SubmitField('Save')

@@ -1,93 +1,11 @@
-.alert{
-  margin-bottom: 0;
+.scrolling-wrapper {
+  overflow-x: scroll;
+  overflow-y: hidden;
+  white-space: nowrap;
 }
-
-.flex-center{
-    justify-content: center !important; 
-}
-/* equal card height */
-.row-equal > div[class*='col-'] {
-  display: flex;
-  flex: 1 0 auto;
-}
-
-.row-equal .card {
- width: 100%;
-}
-
-/* ensure equal card height inside carousel */
-.carousel-inner>.row-equal.active, 
-.carousel-inner>.row-equal.next, 
-.carousel-inner>.row-equal.prev {
-  display: flex;
-}
-
-/* prevent flicker during transition */
-.carousel-inner>.row-equal.active.left, 
-.carousel-inner>.row-equal.active.right {
-  opacity: 0.5;
-  display: flex;
-}
-
-.slick-dots {
-  text-align: center;
-  margin: 0 0 10px 0;
-  padding: 0;
-}
-.slick-dots li {
+.scrolling-wrapper .card {
   display: inline-block;
-  margin-left: 4px;
-  margin-right: 4px;
 }
-.slick-dots li.slick-active button {
-  background-color: black;
-}
-.slick-dots li button {
-  font: 0/0 a;
-  text-shadow: none;
-  color: transparent;
-  background-color: #999;
-  border: none;
-  width: 15px;
-  height: 15px;
-  border-radius: 50%;
-}
-.slick-dots li :hover {
-  background-color: black;
-}
-
-/* Custom Arrow */
-.prev {
-  color: #999;  
-  top: 38%;
-  left: -2em;
-  font-size: 1.5em;
-}
-.prev :hover {
-  cursor: pointer;
-  color: black;
-}
-
-.next {
-  color: #999;
-  top: 38%;
-  right: -2em;
-  font-size: 1.5em;
-}
-.next :hover {
-  cursor: pointer;
-  color: black;
-}
-
-@media screen and (max-width: 800px) {
-  .next {
-    display: none !important;
-  }
-}
-
-
-
-
 
 
 
@@ -200,8 +118,8 @@ body,html {
 }
 
 #mysearch{
-    padding-top: 10%;
-    padding-bottom: 8%;
+    padding-top: 20%;
+    padding-bottom: 18%;
     background: url(imgs/about-img.png) no-repeat;
     background-attachment: fixed;
     opacity: 0.85;
@@ -209,9 +127,7 @@ body,html {
 
 
 #back{
-  background: url(imgs/member-bg.jpg);
-  background-attachment: fixed;
-  background-image: -webkit-linear-gradient(0deg, #691cff 0%, #f51cb0 100%);
+  
 }
 .scrolling-wrapper {
   overflow-x: scroll;
@@ -1521,7 +1437,6 @@ body,html {
   }
   
   nav {
-    margin-right: 70px;
     -webkit-transition: all 0.3s ease 0s;
     -moz-transition: all 0.3s ease 0s;
     -o-transition: all 0.3s ease 0s;

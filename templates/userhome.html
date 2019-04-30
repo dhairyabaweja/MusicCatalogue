@@ -1,4 +1,4 @@
-
+<link href="my.css" rel="stylesheet"></link>
 <script>
     function storeID(id) {
         var xhttp = new XMLHttpRequest();
@@ -17,7 +17,7 @@
         ul.forEach(element => {
             li = element.querySelectorAll('#postsearch');
             for (i = 0; i < li.length; i++) {
-                a = li[i].querySelector('.card-title');
+                a = li[i].querySelector('.head');
                 if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
                     li[i].style.display = "";
                 }
@@ -37,9 +37,9 @@
 
 <!-- Start Banner Area -->
     <!-- End Banner Area -->
- 
+ <div id="searchback">
 <div id="mysearch">
-    <h2>Welcome {{ user }} !</h2>
+    <!-- <h2>Welcome {{ user }} !</h2> -->
     <div class="d-flex justify-content-center" >
         <div class="searchbar">
             <input class="search_input" type="text" name="search" autocomplete="off" value="" placeholder="Search among Songs, Albums and Artists" aria-label="Search"
@@ -48,14 +48,17 @@
         </div>
     </div>
 </div>
+</div>
 
-
-<div id="back">
-<h1 title="Songs" class="headings">Songs</h1>
-<div class="row container" id="wrapper">
+<div id="backback">
+<ul id="menu">
+    <li class="titles"><a href="/"><span >Songs</span></a></li>
+</ul>
+<div class="row container scrolling-wrapper" id="wrapper">
+        <div class="col-md-4 mb-5 songpost" >  
     {% for post in posts %}
-    <div class="col-md-4 mb-5 songpost" id="postsearch">
-            <div class="card">
+    
+            <!-- <div class="card">
             <div class="card-body">
                 <h2 class="card-title">{{ post.SongName }}</h2>
                 <img src="{{ post.Image }}" height="150px" width="150px">
@@ -64,33 +67,58 @@
                     </audio>
             <div class="card-footer">
             </div>
-            </div>
-        </div>
+            </div> -->
+            <a class="card" href="#!" id="postsearch">
+                    <div class="front" style="background-image: url('{{ post.Image }}');">
+                      <h2 class="head">{{ post.SongName }}</h2>
+                    </div>
+                    <div class="back">
+                      <div id="audio">
+                              <audio controls="controls" src="{{ post.SongUrl }}" onplay="storeID('{{post.SongID}}')">
+                                  </audio>
+                      </div>
+                    </div>
+            </a>
+       
     {% endfor %}
 </div>
+</div>
 
-<h1 title="Albums" class="headings" >Albums</h1>
-<div class="row container" id="wrapper">
+
+
+
+
+
+
+
+
+<ul id="menu">
+    <li class="titles"><a href="/"><span >Albums</span></a></li>
+</ul>
+<div class="row container scrolling-wrapper" id="wrapper">
+        <div class="col-md-4 mb-5 songpost" id="postsearch" >
     {% for album in albumpost %}
-        <div class="col-md-4 mb-5 songpost" id="postsearch" onclick="location.href='/songInfo/{{ album.AlbumID }}'">
-            <div class="card">
-            <div class="card-body">
-                <h2 class="card-title">{{ album.AlbumName }}</h2>
-                <img src="{{ album.Image }}" height="150px" width="150px">
-            </div>
-            <div class="card-footer">
-                <p>Num of Songs : {{ album.NumSongs }}</p>
-            </div>
-            </div>
-        </div>
+            <a class="card" onclick="location.href='/songInfo/{{ album.AlbumID }}'">
+                <div class="front" style="background-image: url('{{ album.Image }}');">
+                  <h2 class="head">{{ album.AlbumName }}</h2>
+                </div>
+                <div class="back">
+                    <p>Num of Songs : {{ album.NumSongs }}</p>
+                </div>
+            </a>
+        
     {% endfor %}
 </div>
+</div>
 
-<h1 title="Artists" class="headings">Artists</h1>
-<div class="row container" id="wrapper">
+<ul id="menu">
+    <li class="titles"><a href="/"><span >Artists</span></a></li>
+</ul>
+<div class="row container scrolling-wrapper" id="wrapper">
+    <div class="col-md-4 mb-5 songpost" id="postsearch" >
         {% for artist in artistpost %}
-            <div class="col-md-4 mb-5 songpost" id="postsearch" onclick="location.href='/songInfoOfArtist/{{ artist.ArtistID }}'">
-                <div class="card">
+            
+                <!-- <div class="card" onclick="location.href='/songInfoOfArtist/{{ artist.ArtistID }}'">
                 <div class="card-body">
                     <h2 class="card-title">{{ artist.ArtistName }}</h2>
                     <img src="{{ artist.Image }}" height="150px" width="150px" >
@@ -98,9 +126,93 @@
                 <div class="card-footer">
                     <p>Num of Songs : {{ artist.NumofSongs }}</p>
                 </div>
-                </div>
-            </div>
+                </div> -->
+                <a class="card" onclick="location.href='/songInfoOfArtist/{{ artist.ArtistID }}'">
+                    <div class="front" style="background-image: url('{{ artist.Image }}');">
+                      <h2 class="head">{{ artist.ArtistName }}</h2>
+                    </div>
+                    <div class="back">
+                        <p>Num of Songs : {{ artist.NumofSongs }}</p>
+                    </div>
+                </a>
+            
         {% endfor %}
     </div>
+    </div>
 </div>
+<footer class="page-footer font-small stylish-color-dark pt-4">
+
+        <!-- Footer Links -->
+        <div class="container">
+    
+          <!-- Grid row-->
+          <hr class="rgba-white-light" style="margin: 0 15%;">
+    
+          <!-- Grid row-->
+          <div class="row d-flex text-center justify-content-center mb-md-0 mb-4">
+    
+            <!-- Grid column -->
+            <div class="col-md-8 col-12 mt-5">
+              <p style="line-height: 1.7rem"> <strong>Music</strong> gives soul to the universe,
+                  wings to the <strong>mind</strong>, flight
+                  to the <strong>imagination</strong></p>
+            </div>
+            <!-- Grid column -->
+    
+          </div>
+          <!-- Grid row-->
+          <hr class="clearfix d-md-none rgba-white-light" style="margin: 10% 15% 5%;">
+    
+          <!-- Grid row-->
+          <div class="row pb-3">
+    
+            <!-- Grid column -->
+            <div class="col-md-4"><p></p></div>
+            <div class="col-md-4">
+    
+              <div class="mb-5 flex-center">
+    
+                <!-- Facebook -->
+                <a class="fb-ic">
+                  <i class="fab fa-facebook-f fa-lg white-text mr-4"> </i>
+                </a>
+                <!-- Twitter -->
+                <a class="tw-ic">
+                  <i class="fab fa-twitter fa-lg white-text mr-4"> </i>
+                </a>
+                <!-- Google +-->
+                <a class="gplus-ic">
+                  <i class="fab fa-google-plus-g fa-lg white-text mr-4"> </i>
+                </a>
+                <!--Linkedin -->
+                <a class="li-ic">
+                  <i class="fab fa-linkedin-in fa-lg white-text mr-4"> </i>
+                </a>
+                <!--Instagram-->
+                <a class="ins-ic">
+                  <i class="fab fa-instagram fa-lg white-text mr-4"> </i>
+                </a>
+                <!--Pinterest-->
+                <a class="pin-ic">
+                  <i class="fab fa-pinterest fa-lg white-text"> </i>
+                </a>
+    
+              </div>
+    
+            </div>
+            <!-- Grid column -->
+    
+          </div>
+          <!-- Grid row-->
+    
+        </div>
+        <!-- Footer Links -->
+    
+        <!-- Copyright -->
+        <div class="footer-copyright text-center py-3">Made with love by Group 16
+        </div>
+        <!-- Copyright -->
+    
+      </footer>
+      <!-- Footer -->                 
 {% endblock content %}

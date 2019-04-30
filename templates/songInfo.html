@@ -8,11 +8,11 @@
 
 {% extends "userbasiclayout.html" %}
 {% block content %}
-<h1 title="Songs" >Songs</h1>
-<div class="row container">
-    {% for post in posts %}
+<div id="historyback">
+        <div class="row container scrolling-wrapper" id="wrapper">
         <div class="col-md-4 mb-5 songpost">
-            <div class="card">
+    {% for post in posts %}
+            <!-- <div class="card">
             <div class="card-body">
                 <h2 class="card-title">{{ post.SongName }}</h2>
                 <img src="{{ post.Image }}" width="100%">
@@ -21,8 +21,19 @@
                     </audio>
             <div class="card-footer">
             </div>
-            </div>
-        </div>
+            </div> -->
+            <a class="card" href="#!" id="postsearch">
+                    <div class="front" style="background-image: url('{{ post.Image }}');">
+                      <h2 class="head">{{ post.SongName }}</h2>
+                    </div>
+                    <div class="back">
+                            <audio controls="controls" src="{{ post.SongUrl }}" onplay="storeID('{{post.SongID}}')">
+                                </audio>
+                    </div>
+            </a>
+        
     {% endfor %}
+</div>
+</div>
 </div>
 {% endblock content %}
