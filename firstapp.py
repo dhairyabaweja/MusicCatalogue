@@ -36,7 +36,7 @@ def userhome():
         for row in image:
             songimage = row
         SongImage = songimage[0]
-        post = {'SongID':songID, 'SongName':song[1],'Image':SongImage,'SongUrl':song[5]}
+        post = {'SongID':songID, 'SongName':song[1],'Image':SongImage,'SongUrl':song[5],'Duration':song[4],'Language':song[3]}
         posts.append(post)
 
     albums = engine.execute("select * from Album")
@@ -45,7 +45,7 @@ def userhome():
         x = engine.execute("select count(*) from Songs where AlbumID = :albumID",{'albumID':albumID})
         for row in x:
             noOfSongs = row[0]
-        post = {'AlbumName':album[1], 'Image':album[2], 'NumSongs': noOfSongs, 'AlbumID': album[0]}
+        post = {'AlbumName':album[1], 'Image':album[2], 'NumSongs': noOfSongs, 'AlbumID': album[0],'Year':album[3]}
         albumpost.append(post)
 
     artists = engine.execute("select * from Artist")
@@ -54,7 +54,7 @@ def userhome():
         x = engine.execute("select count(*) from Composition where ArtistID = :artistID",{'artistID':artistID})
         for row in x:
             noOfSongs= row[0]
-        post = {'ArtistID':artist[0], 'ArtistName':artist[1], 'Image':artist[3], 'NumofSongs': noOfSongs}
+        post = {'ArtistID':artist[0], 'ArtistName':artist[1], 'Image':artist[3], 'NumofSongs': noOfSongs,'Gender':artist[2]}
         artistpost.append(post)
     return render_template('userhome.html', posts=posts,albumpost=albumpost, artistpost=artistpost)
 
@@ -72,7 +72,7 @@ def userhistory():
             songimage = row
         SongImage = songimage[0]
         dateandtime = song[8]
-        post = {'SongName':songName, 'SongImage':SongImage, 'DateAndTime':dateandtime}
+        post = {'SongName':songName, 'SongImage':SongImage, 'DateAndTime':dateandtime,'Duration':song[4],'Language':song[3],'SongUrl':song[5]}
         historyposts.append(post)
     return render_template('userhistory.html',historyposts=historyposts)
 
@@ -91,7 +91,7 @@ def admin():
         for row in image:
             songimage = row
         SongImage = songimage[0]
-        post = {'SongName':song[1],'Image':SongImage,'SongUrl':song[5], 'SongId':song[0]}
+        post = {'SongName':song[1],'Image':SongImage,'SongUrl':song[5], 'SongId':song[0],'Duration':song[4],'Language':song[3]}
         posts.append(post)
 
     return render_template('adminDisplaySong.html',posts=posts)
@@ -173,9 +173,7 @@ def registeralbum():
         engine.execute("insert into Album(AlbumID, AlbumName, Image, YearofRelease) values (:albumid,:albumname,:imageurl,:yearofrelease)",{'albumid':albumid,'albumname':albumname,
                          'imageurl':imageurl,'yearofrelease':yearofrelease})
         flash('Registered Successfully!', 'success')
-        # return redirect(url_for('addsong'))
-    else :
-        flash('Not Registered', 'danger')
+        return redirect(url_for('addsong'))
     return render_template('registerAlbum.html', title='Register', form=form)
 
 
@@ -194,9 +192,8 @@ def registerartist():
         engine.execute("insert into Artist(ArtistID, ArtistName,Gender, Image) values (:artistid,:artistname,:gender,:imageurl)",{'artistid':artistid,'artistname':artistname,
                          'imageurl':imageurl,'gender':gender})
         flash('Registered Successfully!', 'success')
-        # return redirect(url_for('addsong'))
-    else :
-        flash('Not Registered', 'danger')
+        return redirect(url_for('addsong'))
+
     return render_template('registerArtist.html', title='Register', form=form)
 
 
@@ -291,7 +288,7 @@ def songInfoOfArtist(artistid):
         for row in image:
             songimage = row
         SongImage = songimage[0]
-        post = {'SongID':songID, 'SongName':song[1],'Image':SongImage,'SongUrl':song[5]}
+        post = {'SongID':songID, 'SongName':song[1],'Image':SongImage,'SongUrl':song[5],'Duration':song[4],'Language':song[3]}
         posts.append(post)
     return render_template('songInfo.html',posts=posts)
 
@@ -359,8 +356,8 @@ def updateinfo():
     for row in last:
         lastname = row[0]
     form = UpdateForm()
-    form.firstname.data = firstname
-    form.lastname.data = lastname
+    # form.firstname.data = firstname
+    # form.lastname.data = lastname
     if form.validate_on_submit() :
         fn = form.firstname.data
         ln = form.lastname.data
@@ -405,11 +402,13 @@ def updateUser():
     for row in last:
         lastname = row[0]
     form = UpdateForm()
-    form.firstname.data = firstname
-    form.lastname.data = lastname
+    # form.firstname.data = firstname
+    # form.lastname.data = lastname
     if form.validate_on_submit() :
         fn = form.firstname.data
+        print(fn)
         ln = form.lastname.data
+        print(ln)
         password = form.newpassword.data
         oldpassword = form.oldpassword.data
         password_reg = engine.execute("select password from UserInfo where email = :email_entered",{'email_entered':email_entered})
@@ -427,7 +426,7 @@ def updateUser():
             return redirect(url_for('userProfile'))
         else:
             flash('Old password not valid!','danger')
-            return ''
+            return redirect(url_for('updateUser'))
     return render_template('userUpdateProfile.html', form=form)
 
 

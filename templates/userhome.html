@@ -52,7 +52,7 @@
 
 <div id="backback">
 <ul id="menu">
-    <li class="titles"><a href="/"><span >Songs</span></a></li>
+    <li class="titles"><a href="#"><span >Songs</span></a></li>
 </ul>
 <div class="row container scrolling-wrapper" id="wrapper">
         <div class="col-md-4 mb-5 songpost" >  
@@ -73,11 +73,17 @@
                       <h2 class="head">{{ post.SongName }}</h2>
                     </div>
                     <div class="back">
+                            <div>
+                                    <div ><p class="info" id="songinfo">{{ post.Language }}<br>
+                                        {{ post.Duration }} s</p>
+                                    </div>
+                            
                       <div id="audio">
                               <audio controls="controls" src="{{ post.SongUrl }}" onplay="storeID('{{post.SongID}}')">
                                   </audio>
                       </div>
                     </div>
+                </div>
             </a>
        
     {% endfor %}
@@ -93,7 +99,7 @@
 
 
 <ul id="menu">
-    <li class="titles"><a href="/"><span >Albums</span></a></li>
+    <li class="titles"><a href="#"><span >Albums</span></a></li>
 </ul>
 <div class="row container scrolling-wrapper" id="wrapper">
         <div class="col-md-4 mb-5 songpost" id="postsearch" >
@@ -103,7 +109,9 @@
                   <h2 class="head">{{ album.AlbumName }}</h2>
                 </div>
                 <div class="back">
-                    <p>Num of Songs : {{ album.NumSongs }}</p>
+                    <p class="info">
+                        Year of Release : {{ album.Year }}<br>
+                        Num of Songs : {{ album.NumSongs }}</p>
                 </div>
             </a>
         
@@ -112,7 +120,7 @@
 </div>
 
 <ul id="menu">
-    <li class="titles"><a href="/"><span >Artists</span></a></li>
+    <li class="titles"><a href="#"><span >Artists</span></a></li>
 </ul>
 <div class="row container scrolling-wrapper" id="wrapper">
     <div class="col-md-4 mb-5 songpost" id="postsearch" >
@@ -132,7 +140,9 @@
                       <h2 class="head">{{ artist.ArtistName }}</h2>
                     </div>
                     <div class="back">
-                        <p>Num of Songs : {{ artist.NumofSongs }}</p>
+                        <p class="info">
+                            {{ artist.Gender }}<br>
+                            Num of Songs : {{ artist.NumofSongs }}</p>
                     </div>
                 </a>
             
@@ -153,9 +163,9 @@
     
             <!-- Grid column -->
             <div class="col-md-8 col-12 mt-5">
-              <p style="line-height: 1.7rem"> <strong>Music</strong> gives soul to the universe,
-                  wings to the <strong>mind</strong>, flight
-                  to the <strong>imagination</strong></p>
+              <p class="footertext" style="line-height: 1.7rem"> <strong style="font-weight: 800">Music</strong> gives soul to the universe,
+                  wings to the <strong style="font-weight: 800">mind</strong>, flight
+                  to the <strong style="font-weight: 800">imagination</strong></p>
             </div>
             <!-- Grid column -->
     
@@ -167,35 +177,28 @@
           <div class="row pb-3">
     
             <!-- Grid column -->
-            <div class="col-md-4"><p></p></div>
-            <div class="col-md-4">
+            <div class="col-md-5"><p></p><p></p></div>
+            <div class="col-md-5">
     
-              <div class="mb-5 flex-center">
+              <div class="flex-center">
     
                 <!-- Facebook -->
-                <a class="fb-ic">
+                <a class="fb-ic" href="https://www.facebook.com/dhairya.baweja.1">
                   <i class="fab fa-facebook-f fa-lg white-text mr-4"> </i>
                 </a>
                 <!-- Twitter -->
-                <a class="tw-ic">
+                <a class="tw-ic" href="https://twitter.com/Blackwidow133">
                   <i class="fab fa-twitter fa-lg white-text mr-4"> </i>
                 </a>
                 <!-- Google +-->
-                <a class="gplus-ic">
-                  <i class="fab fa-google-plus-g fa-lg white-text mr-4"> </i>
-                </a>
+                
                 <!--Linkedin -->
-                <a class="li-ic">
-                  <i class="fab fa-linkedin-in fa-lg white-text mr-4"> </i>
-                </a>
+               
                 <!--Instagram-->
-                <a class="ins-ic">
+                <a class="ins-ic" href="https://www.instagram.com/dhairyabaweja/">
                   <i class="fab fa-instagram fa-lg white-text mr-4"> </i>
                 </a>
-                <!--Pinterest-->
-                <a class="pin-ic">
-                  <i class="fab fa-pinterest fa-lg white-text"> </i>
-                </a>
+                
     
               </div>
     
@@ -209,7 +212,7 @@
         <!-- Footer Links -->
     
         <!-- Copyright -->
-        <div class="footer-copyright text-center py-3">Made with love by Group 16
+        <div class="footer-copyright text-center py-3 footertext">Made with <icon class="fa fa-heart"></icon> by Group 16
         </div>
         <!-- Copyright -->
     

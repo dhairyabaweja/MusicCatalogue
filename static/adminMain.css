@@ -1,7 +1,60 @@
+body {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
 
+#info{
+    font-size: 15px;
+    font-weight: 300;
+}
 .jumbotron{
     margin-bottom: 0rem;
 }
+#mysearch{
+    padding-top: 3%;
+    padding-bottom: 3%;
+}
+.searchbar{
+    height: 60px;
+    background-color: #ebecec;
+    border-radius: 30px;
+    padding: 10px;
+    opacity: 1;
+    }
+
+    .search_input{
+    color: rgb(17, 17, 17);
+    border: 0;
+    outline: 0;
+    background: none;
+    width: 0;
+    caret-color:transparent;
+    line-height: 40px;
+    transition: width 0.4s linear;
+    }
+
+    .searchbar:hover > .search_input{
+    padding: 0 10px;
+    width: 450px;
+    caret-color:red;
+    transition: width 0.4s linear;
+    }
+
+    .searchbar:hover > .search_icon{
+    background: rgb(94, 92, 92);
+    color:wheat;
+    }
+
+    .search_icon{
+    height: 40px;
+    width: 40px;
+    float: right;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    color:rgb(26, 24, 24);
+    }
 
 #playsong{
     margin-right: 5%;
@@ -17,3 +70,145 @@
     margin-bottom: 20px;
     opacity: 0.7;
   }
+
+  .container{
+    min-width: 1300px;
+  }
+  audio{
+    width: 150px;
+    background-color: #e61a80;
+  }
+
+  .scrolling-wrapper {
+    overflow-x: scroll;
+    overflow-y: hidden;
+    white-space: nowrap;
+  }
+  .scrolling-wrapper .card {
+    display: inline-block;
+  }
+  
+  .head{
+    color:rgb(255, 255, 255);
+    font-weight: 500;
+    font-size:20;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    /* text-shadow: 2px 2px 5px red; */
+    color: white;
+  text-shadow: 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
+    margin-top: 90%;
+}
+
+  .card {
+    color: inherit;
+    cursor: pointer;
+    width: 50%;
+    min-width: 50%;
+    /* height: 150px !important; */
+    min-height: 35%;
+    /* max-height: 150px !important; */
+    perspective: 1000px;
+    margin: 0.3rem;
+    position: relative;
+  }
+  @media screen and (max-width: 800px) {
+    .card {
+      width: calc(100% - 2rem);
+    }
+  }
+  @media screen and (max-width: 500px) {
+    .card {
+      width: 100%;
+    }
+  }
+  
+  .front{
+    display: flex;
+    border-radius: 6px;
+    background-size: cover;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
+    transition: ease-in-out 600ms;
+  }
+  .back {
+    display: flex;
+    border-radius: 6px;
+    background-position: center;
+    background-size: cover;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
+    transition: ease-in-out 600ms;
+  }
+  
+  .front {
+    background-size:  cover;
+    background-repeat:no-repeat; 
+    padding: 2rem;
+    font-size: 1.618rem;
+    font-weight: 600;
+    color: #fff;
+    overflow: hidden;
+    font-family: Poppins, sans-serif;
+  }
+  .front:before {
+    position: absolute;
+    display: block;
+    content: '';
+    top: 0;
+    left: 0;
+    right: 0;
+   
+    background: linear-gradient(135deg, #1a9be6, #1a57e6);
+    opacity: .23;
+    z-index: -1;
+  }
+  .card:hover .front {
+    transform: rotateY(180deg);
+  }
+  .card:nth-child(even):hover .front {
+    transform: rotateY(-180deg);
+  }
+  
+  .back {
+    background: rgb(12, 12, 12);
+    transform: rotateY(-180deg);
+    padding: 4em 2em;
+  }
+  .back .button {
+    background: linear-gradient(135deg, #1a9be6, #1a57e6);
+  }
+  .back .button:before {
+    box-shadow: 0 0 10px 10px rgba(26, 87, 230, 0.25);
+    background-color: rgba(26, 87, 230, 0.25);
+  }
+  .card:hover .back {
+    transform: rotateY(0deg);
+  }
+  .card:nth-child(even) .back {
+    transform: rotateY(180deg);
+  }
+  .card:nth-child(even) .back .button {
+    background: linear-gradient(135deg, #e61a80, #e61a3c);
+  }
+  .card:nth-child(even) .back .button:before {
+    box-shadow: 0 0 10px 10px rgba(230, 26, 60, 0.25);
+    background-color: rgba(230, 26, 60, 0.25);
+  }
+  .card:nth-child(even):hover .back {
+    transform: rotateY(0deg);
+  }
+  

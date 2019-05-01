@@ -6,6 +6,12 @@ body {
   max-width: 100%;
   overflow-x: hidden;
 }
+
+
+#info{
+  font-size: 15px;
+  font-weight: 300;
+}
 .form-control{
   width: 30%;
   display: inline;
@@ -37,7 +43,7 @@ body{
   outline-width: 2px;
 }
 #wrapper{
-  padding-top: 4%;
+  padding-top: 5%;
    
 }
 
@@ -180,13 +186,25 @@ body{
   cursor: pointer;
   width: 50%;
   min-width: 50%;
-  /* height: 150px !important; */
+  height: 200px !important;
   min-height: 30%;
   /* max-height: 150px !important; */
   perspective: 1000px;
   margin: 0.3rem;
   position: relative;
 }
+/* #chutiya{
+  color: inherit;
+  cursor: pointer;
+  width: 50%;
+  min-width: 50%;
+  /* height: 150px !important; */
+  /* min-height: 50%; */
+  /* max-height: 150px !important; */
+  /*perspective: 1000px;
+  margin: 0.3rem;
+  position: relative;
+} */
 @media screen and (max-width: 800px) {
   .card {
     width: calc(100% - 2rem);
@@ -259,6 +277,11 @@ body{
   transform: rotateY(-180deg);
 }
 
+.footertext{
+  font-size: 20px;
+  color: dimgray; 
+}
+
 .back {
   background: rgb(12, 12, 12);
   transform: rotateY(-180deg);
@@ -267,6 +290,15 @@ body{
 .back .button {
   background: linear-gradient(135deg, #1a9be6, #1a57e6);
 }
+.back .info {
+  font-size: 15px;
+}
+#songinfo{
+  font-size: 20px;
+  font-weight: 500;
+  color: wheat;
+}
+
 .back .button:before {
   box-shadow: 0 0 10px 10px rgba(26, 87, 230, 0.25);
   background-color: rgba(26, 87, 230, 0.25);
